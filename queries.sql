@@ -16,7 +16,8 @@ group by
   e.first_name, 
   e.last_name 
 order by 
-  income desc;
+  income desc
+  limit 10;
   
   --Решение второй задачи 5 шага
 select 
