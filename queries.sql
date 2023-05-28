@@ -73,7 +73,7 @@ order by
  --Решение второй задачи 6 шага
 select 
 	to_char(sale_date, 'YYYY-MM') as date,
-	count(distinct customer_id) as tota_customers,
+	count(distinct customer_id) as total_customers,
 	sum(quantity * price) as income
 from sales s
 left join products p 
