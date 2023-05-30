@@ -34,23 +34,24 @@ order by average_income asc
 ;
   
   --Решение третей задачи 5 шага
+with tab as
+(
 select 
-  concat(e.first_name, ' ', e.last_name) as name, 
-  to_char(sale_date, 'day') as weekday, 
-  round(
-    sum(s.quantity * p.price), 
-    0
-  ) as income 
-from 
-  sales s 
-  left join employees e on s.sales_person_id = e.employee_id 
-  left join products p on s.product_id = p.product_id 
-group by 
-  sale_date, 
-  e.first_name, 
-  e.last_name 
-order by 
-  s.sale_date;
+	concat(e.first_name,' ', e.last_name) as name ,
+	to_char(sale_date, 'day') as weekday,
+	s.quantity as q, p.price as p
+from sales s 
+left join employees e 
+on s.sales_person_id = e.employee_id 
+left join products p 
+on s.product_id = p.product_id 
+group by e.first_name, e.last_name,
+	sale_date,s.quantity, p.price
+order by s.sale_date
+)
+select tab.name, tab.weekday, sum(tab.q * tab.p)
+from tab
+group by tab.weekday, tab.name
   
   --Решение первой задачи 6 шага
 select 
