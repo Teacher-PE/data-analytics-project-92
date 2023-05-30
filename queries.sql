@@ -6,7 +6,7 @@ from
 --Решение первой задачи 5 шага
 select 
   concat(e.first_name, ' ', e.last_name) as name, 
-  count(s.quantity) as operation, 
+  count(s.quantity) as operations, 
   sum(s.quantity * p.price) as income 
 from 
   sales s 
