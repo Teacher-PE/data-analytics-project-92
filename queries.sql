@@ -34,27 +34,20 @@ order by average_income asc
 ;
   
   --Решение третей задачи 5 шага
-with tab as
-(
+with inc as (
 select 
-	concat(e.first_name,' ', e.last_name) as name ,
-	to_char(sale_date, 'day') as weekday,
-	s.quantity as q, p.price as p,
-	extract(isodow from sale_date) as num_day
+concat(e.first_name,' ', e.last_name) as name,extract(isodow from sale_date) as num_day,
+round(sum(quantity*price),0) as income,
+to_char(sale_date, 'day') as weekday
 from sales s 
-full join employees e 
+left join employees e 
 on s.sales_person_id = e.employee_id 
-full join products p 
+left join products p 
 on s.product_id = p.product_id 
-group by e.first_name, e.last_name,
-	extract(isodow from sale_date),s.quantity, p.price, sale_date
-order by e.first_name, e.last_name, extract(isodow from sale_date)
-)
-select tab.name ,tab.weekday ,round(sum(tab.q * tab.p),0) as income
-from tab
-where tab.weekday is not null
-group by tab.name, tab.num_day, tab.weekday
-order by tab.num_day, tab.name
+group by e.first_name, e.last_name, extract(isodow from sale_date), to_char(sale_date, 'day')
+order by  extract(isodow from sale_date),e.first_name, e.last_name )
+select inc.name, inc.weekday, inc.income
+from inc
   
   --Решение первой задачи 6 шага
 select 
