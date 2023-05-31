@@ -39,19 +39,22 @@ with tab as
 select 
 	concat(e.first_name,' ', e.last_name) as name ,
 	to_char(sale_date, 'day') as weekday,
-	s.quantity as q, p.price as p
+	s.quantity as q, p.price as p,
+	extract(isodow from sale_date) as num_day
 from sales s 
-left join employees e 
+full join employees e 
 on s.sales_person_id = e.employee_id 
-left join products p 
+full join products p 
 on s.product_id = p.product_id 
 group by e.first_name, e.last_name,
-	sale_date,s.quantity, p.price
-order by s.sale_date
+	extract(isodow from sale_date),s.quantity, p.price, sale_date
+order by e.first_name, e.last_name, extract(isodow from sale_date)
 )
-select tab.name, tab.weekday, sum(tab.q * tab.p)
+select tab.name ,tab.weekday ,round(sum(tab.q * tab.p),0) as income
 from tab
-group by tab.weekday, tab.name
+where tab.weekday is not null
+group by tab.name, tab.num_day, tab.weekday
+order by tab.num_day, tab.name
   
   --Решение первой задачи 6 шага
 select 
