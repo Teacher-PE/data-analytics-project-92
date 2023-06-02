@@ -28,7 +28,14 @@ on s.sales_person_id = e.employee_id
 left join products p 
 on s.product_id = p.product_id 
 group by 1
-having avg(s.quantity * p.price) < 267166
+having avg(s.quantity * p.price) < ( -- Поздапрос, вычисляющий среднею выручку за сделку по всем продавцам
+select round(avg(s.quantity * p.price),0) as average_income
+from sales s 
+left join employees e 
+on s.sales_person_id = e.employee_id 
+left join products p 
+on s.product_id = p.product_id 
+)
 order by average_income asc 
 ;
 
